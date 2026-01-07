@@ -15,6 +15,7 @@ module fifo_sync #(
 reg [WIDTH-1:0] mem [DEPTH-1:0];
 reg [ADDR:0] rd_ptr,wr_ptr;
 
+
 always @ (posedge clk or negedge rst_n) begin
     if(!rst_n) begin
         wr_ptr <= 0 ;
@@ -44,11 +45,13 @@ assign full  = (wr_ptr[ADDR] != rd_ptr[ADDR]) &&
 
 assign empty = (wr_ptr==rd_ptr);
 
-always @(posedge clk or negedge rst_n) begin
-    if (!rst_n)
-        data_out <= 0;
-    else if (rd_en && !empty)
-        data_out <= mem[rd_ptr[ADDR-1:0]]; 
-end
+// always @(posedge clk or negedge rst_n) begin
+    // if (!rst_n)
+        // data_out <= 0;
+    // else if (rd_en && !empty)
+        // data_out <= mem[rd_ptr[ADDR-1:0]]; 
+// end
+
+assign data_out = mem[rd_ptr[ADDR-1:0]];
 
 endmodule

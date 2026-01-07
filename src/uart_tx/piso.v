@@ -31,17 +31,17 @@ module piso (
                     if (tx_start) begin
                         frame <= {1'b1, parity, data_in, 1'b0};
                         state <= ACTIVE;
+                        active <= 1'b1;
                     end
                 end
                 ACTIVE: begin
-                    active <= 1'b1;
                     tx     <= frame[0];
+                    frame <= frame >> 1;
+                    count <= count + 1'b1;
+
                     if (count == 4'd10) begin
-                        state <= IDLE;
-                        count <= 0;
-                    end else begin
-                        frame <= frame >> 1;
-                        count <= count + 1'b1;
+                        state  <= IDLE;
+                        active <= 1'b0;   // AFTER stop bit
                     end
                 end
             endcase

@@ -17,19 +17,7 @@ wire [7:0] fifo2piso;
 wire bd_clk_temp;
 wire parity_temp;
 wire fifo_empty;
-reg rd_en_reg;
 
-always @(posedge clk or negedge rst_n) begin
-    if (!rst_n) begin
-        rd_en_reg <= 1'b0;
-    end else begin
-        if (!fifo_empty && send) begin
-            rd_en_reg <= 1'b1; // Trigger a read from FIFO
-        end else begin
-            rd_en_reg <= 1'b0; // De-assert after 1 cycle
-        end
-    end
-end
 
 baud_gen bd_gen(
     .clk(clk),
@@ -52,7 +40,7 @@ fifo_sync #(.WIDTH(8),.ADDR(4),.DEPTH(16))  tx_fifo(
     .rst_n(rst_n),
     .data_in(data_in),
     .wr_en(wr_en),
-    .rd_en(send),
+    .rd_en(!fifo_empty && !active && send),
     .data_out(fifo2piso),
     .full(fifo_full),
     .empty(fifo_empty)
@@ -69,5 +57,10 @@ piso piso_uut(
     .tx(tx),
     .active(active)
 );
+
+
+
+
+
 
 endmodule
