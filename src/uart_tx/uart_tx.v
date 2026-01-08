@@ -1,7 +1,6 @@
 module uart_tx(
     input clk,rst_n,
     input [1:0] parity_type,
-    input send,
     input [1:0] baud_rate,
     input [7:0] data_in,
     input wr_en,
@@ -17,6 +16,7 @@ wire [7:0] fifo2piso;
 wire bd_clk_temp;
 wire parity_temp;
 wire fifo_empty;
+wire fifo_rd_en;
 
 
 baud_gen bd_gen(
@@ -40,7 +40,7 @@ fifo_sync #(.WIDTH(8),.ADDR(4),.DEPTH(16))  tx_fifo(
     .rst_n(rst_n),
     .data_in(data_in),
     .wr_en(wr_en),
-    .rd_en(!fifo_empty && !active && send),
+    .rd_en(fifo_rd_en),
     .data_out(fifo2piso),
     .full(fifo_full),
     .empty(fifo_empty)
@@ -49,13 +49,15 @@ fifo_sync #(.WIDTH(8),.ADDR(4),.DEPTH(16))  tx_fifo(
 
 
 piso piso_uut(
+    .clk(clk),
     .bd_clk(bd_clk_temp),
     .rst_n(rst_n),
-    .tx_start(send),
+    .fifo_empty(fifo_empty),
     .data_in(fifo2piso),
     .parity(parity_temp),
     .tx(tx),
-    .active(active)
+    .active(active),
+    .fifo_rd_en(fifo_rd_en)
 );
 
 
