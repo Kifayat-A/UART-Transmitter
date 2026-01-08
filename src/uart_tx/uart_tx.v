@@ -8,7 +8,8 @@ module uart_tx(
     output reg bd_clk_out,
     output reg active,
     output reg tx,
-    output fifo_full
+    output fifo_full,
+    output fifo_emp
 );
 
 
@@ -26,6 +27,8 @@ baud_gen bd_gen(
     .bd_clk(bd_clk_temp)
 );
 assign bd_clk_out = bd_clk_temp;
+
+assign fifo_emp = fifo_empty;
 
 parity_in parity_uut(
     .rst_n(rst_n),

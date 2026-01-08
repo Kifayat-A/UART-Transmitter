@@ -23,6 +23,23 @@ always @ (*)begin
     endcase
 end 
 
+//always @(posedge clk or negedge rst_n) begin
+//    if(!rst_n) begin
+//        count <= 0;
+//        bd_clk <= 0;
+//    end
+//    else begin
+//        if(count == final_value) begin
+//            count <= 0 ;
+//            bd_clk <= ~bd_clk;
+//        end
+//        else begin
+//            count <= count+1;
+//            bd_clk <= bd_clk;
+//        end
+//        end
+//    end
+
 always @(posedge clk or negedge rst_n) begin
     if(!rst_n) begin
         count <= 0;
@@ -31,14 +48,14 @@ always @(posedge clk or negedge rst_n) begin
     else begin
         if(count == final_value) begin
             count <= 0 ;
-            bd_clk <= ~bd_clk;
+            bd_clk <= 1'b1;  // Pulse high for exactly ONE clk cycle
         end
         else begin
-            count <= count+1;
-            bd_clk <= bd_clk;
-        end
+            count <= count + 1;
+            bd_clk <= 1'b0;  // Stay low otherwise
         end
     end
+end
 
 
 

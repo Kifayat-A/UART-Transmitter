@@ -18,7 +18,7 @@ module piso (
     reg [3:0]  count;
     reg [10:0] frame;
 
-    always @(posedge bd_clk or negedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             state  <= IDLE;
             count  <= 0;
@@ -41,14 +41,16 @@ module piso (
                     end
                 end
                 ACTIVE: begin
-                    tx     <= frame[0];
-                    frame <= frame >> 1;
-                    count <= count + 1'b1;
-                    
+                    if (bd_clk) begin
+                        tx     <= frame[0];
+                        frame <= frame >> 1;
+                        count <= count + 1'b1;
 
-                    if (count == 4'd10) begin
-                        state  <= IDLE;
-                        active <= 1'b0;   // AFTER stop bit
+
+                        if (count == 4'd10) begin
+                            state  <= IDLE;
+                            active <= 1'b0;   // AFTER stop bit
+                        end
                     end
                 end
             endcase
