@@ -29,16 +29,16 @@ always @ (posedge clk or negedge rst_n) begin
 end 
 
 
-always @ (posedge clk or negedge rst_n) begin
+always @ (posedge rd_en or negedge rst_n) begin
     if(!rst_n) begin
         rd_ptr <= 0 ;
     end
     else begin
-        if(rd_en && !empty) begin
+        //if(rd_en && !empty) begin
             rd_ptr <= rd_ptr+1;
         end
     end
-end 
+
 
 assign full  = (wr_ptr[ADDR] != rd_ptr[ADDR]) && 
                (wr_ptr[ADDR-1:0] == rd_ptr[ADDR-1:0]);
