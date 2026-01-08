@@ -1,11 +1,14 @@
 module piso (
+    input clk,
     input        bd_clk,
     input        rst_n,
-    input        tx_start,
     input  [7:0] data_in,
     input        parity,
+    input        fifo_empty,
+
     output reg   tx,
-    output reg   active
+    output reg   active,
+    output reg fifo_rd_en
 );
 
     localparam IDLE   = 1'b0,
@@ -22,14 +25,17 @@ module piso (
             frame  <= 11'b0;
             tx     <= 1'b1;
             active <= 1'b0;
+            fifo_rd_en <= 1'b0;
         end else begin
+            fifo_rd_en <= 0;
             case (state)
                 IDLE: begin
                     tx     <= 1'b1;
                     active <= 1'b0;
                     count  <= 0;
-                    if (tx_start) begin
+                    if (!fifo_empty   && !active) begin
                         frame <= {1'b1, parity, data_in, 1'b0};
+                        fifo_rd_en <= 1;
                         state <= ACTIVE;
                         active <= 1'b1;
                     end
@@ -38,6 +44,7 @@ module piso (
                     tx     <= frame[0];
                     frame <= frame >> 1;
                     count <= count + 1'b1;
+                    
 
                     if (count == 4'd10) begin
                         state  <= IDLE;
@@ -47,5 +54,8 @@ module piso (
             endcase
         end
     end
+
+    
+
 
 endmodule
