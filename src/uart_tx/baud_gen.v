@@ -2,7 +2,6 @@ module baud_gen(
     input clk,rst_n,
     input [1:0]baud_rate,
     output reg bd_clk
-
 );
 
 reg [13:0] count;
@@ -24,21 +23,21 @@ always @ (*)begin
 end 
 
 //always @(posedge clk or negedge rst_n) begin
-//    if(!rst_n) begin
-//        count <= 0;
-//        bd_clk <= 0;
-//    end
-//    else begin
-//        if(count == final_value) begin
-//            count <= 0 ;
-//            bd_clk <= ~bd_clk;
-//        end
-//        else begin
-//            count <= count+1;
-//            bd_clk <= bd_clk;
-//        end
-//        end
-//    end
+//   if(!rst_n) begin
+//       count <= 0;
+//       bd_clk <= 0;
+//   end
+//   else begin
+//       if(count == final_value) begin
+//           count <= 0 ;
+//           bd_clk <= ~bd_clk;
+//       end
+//       else begin
+//           count <= count+1;
+//           bd_clk <= bd_clk;
+//       end
+//       end
+//   end
 
 always @(posedge clk or negedge rst_n) begin
     if(!rst_n) begin
