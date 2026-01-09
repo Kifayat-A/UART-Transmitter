@@ -1,6 +1,6 @@
-VERILOG_SOURCES = src/*.v
-TOPLEVEL = piso
-MODULE = test_piso
+VERILOG_SOURCES = src/uart_tx/*.v
+TOPLEVEL = uart_tx
+MODULE = test_uarttx
 SIM = verilator
 EXTRA_ARGS += --trace --trace-fst --no-timing
 
